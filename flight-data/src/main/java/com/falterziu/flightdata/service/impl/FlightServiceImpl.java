@@ -1,6 +1,7 @@
 package com.falterziu.flightdata.service.impl;
 
 import com.falterziu.flightdata.dto.flight.FlightDto;
+import com.falterziu.flightdata.dto.flight.FlightFilter;
 import com.falterziu.flightdata.dto.flight.FlightResponseDto;
 import com.falterziu.flightdata.dto.flight_class.FlightClassDto;
 import com.falterziu.flightdata.entity.FlightClassEntity;
@@ -11,6 +12,7 @@ import com.falterziu.flightdata.mapper.FlightClassMapper;
 import com.falterziu.flightdata.mapper.FlightMapper;
 import com.falterziu.flightdata.repository.ClassRepository;
 import com.falterziu.flightdata.repository.FlightRepository;
+import com.falterziu.flightdata.repository.FlightSpecifications;
 import com.falterziu.flightdata.service.ClassService;
 import com.falterziu.flightdata.service.FlightService;
 import com.falterziu.flightdata.util.BadRequest;
@@ -20,12 +22,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,33 +49,19 @@ public class FlightServiceImpl implements FlightService {
         validateCapacities(flight);
         FlightEntity flightEntity = flightMapper.toEntity(flight);
         flightEntity.setValidity(Boolean.TRUE);
-        if(flight.getFlightClasses()!=null){
-             flight.getFlightClasses().forEach(flightClassDto-> {
-                 FlightClassEntity flightClass = flightClassMapper.toEntity(flightClassDto);
-                 flightClass.setClassEntity(classRepository.findById(flightClassDto.getClassId()).get());
-                 flightEntity.addFlightClass(flightClass);
-             });
-         }
+        validateAndAddFlightClasses(flight, flightEntity);
         return flightMapper.toDto(flightRepository.save(flightEntity));
     }
 
 
-
     @Override
     public FlightResponseDto updateFlight(Integer id, FlightDto flight) {
-        //mos lejo te editohet nese ka nje booking per kete fluturim
-        FlightEntity flightEntity = Optional.of(flightRepository.getById(id)).
+        FlightEntity flightEntity = flightRepository.findById(id).
                 orElseThrow(() -> new FlightAppNotFoundException(NotFound.FLIGHT_NOT_FOUND));
         validatingDates(flight);
         validateClasses(flight);
         validateCapacities(flight);
-        if(flight.getFlightClasses()!=null){
-            flight.getFlightClasses().forEach(flightClassDto-> {
-                FlightClassEntity flightClass = flightClassMapper.toEntity(flightClassDto);
-                flightClass.setClassEntity(classRepository.findById(flightClassDto.getClassId()).get());
-                flightEntity.addFlightClass(flightClass);
-            });
-        }
+        validateAndAddFlightClasses(flight, flightEntity);
         flightEntity.setCapacity(flight.getCapacity());
         flightEntity.setArrivalTime(flight.getArrivalTime());
         flightEntity.setDepartureTime(flight.getDepartureTime());
@@ -84,23 +72,28 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public Page<FlightResponseDto> getAll(Integer pageNumber, Integer pageSize) {
+    public Page<FlightResponseDto> getAll(Integer pageNumber, Integer pageSize, FlightFilter flightFilter) {
+
+        Specification<FlightEntity> specification = Specification.where(
+                FlightSpecifications.departureTimeGreaterThan(flightFilter.getFrom())
+                        .and(FlightSpecifications.arrivalTimeLessThan(flightFilter.getTo())));
+
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "departureTime"));
-        return flightMapper.toPageDto(flightRepository.findAll(pageable));
+        return flightMapper.toPageDto(flightRepository.findAll(specification,pageable));
     }
 
     @Override
     public void deleteFlight(Integer id) {
-        //mos lejo te anulohet nese ka nje booking per kete fluturim // ose mund te lejohet
-        FlightEntity flight = Optional.of(flightRepository.getById(id)).
+        FlightEntity flight = flightRepository.findById(id).
                 orElseThrow(() -> new FlightAppNotFoundException(NotFound.FLIGHT_NOT_FOUND));
-        flightRepository.delete(flight);
+        flight.setValidity(Boolean.FALSE);
+        flightRepository.save(flight);
     }
 
 
     @Override
     public FlightResponseDto getFlight(Integer id) {
-        FlightEntity flight = Optional.of(flightRepository.getById(id)).
+        FlightEntity flight = flightRepository.findById(id).
                 orElseThrow(() -> new FlightAppNotFoundException(NotFound.FLIGHT_NOT_FOUND));
         return  flightMapper.toDto(flight);
     }
@@ -129,6 +122,17 @@ public class FlightServiceImpl implements FlightService {
     private void validateCapacities(FlightDto flight){
         if(flight.getCapacity() < flight.getFlightClasses().stream().mapToInt(FlightClassDto::getCapacity).sum())
             throw new FlightAppBadRequestException(BadRequest.WRONG_CAPACITIES);
+    }
+
+    private void validateAndAddFlightClasses(FlightDto flight, FlightEntity flightEntity) {
+        if(flight.getFlightClasses()!=null){
+            flight.getFlightClasses().forEach(flightClassDto-> {
+                FlightClassEntity flightClass = flightClassMapper.toEntity(flightClassDto);
+                flightClass.setClassEntity(classRepository.findById(flightClassDto.getClassId()).orElseThrow(()->
+                        new FlightAppNotFoundException(NotFound.CLASS_NOT_FOUND)));
+                flightEntity.addFlightClass(flightClass);
+            });
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 spring.jpa:
   hibernate.ddl-auto: none
   show-sql: true
+  database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 spring.datasource:
   url: jdbc:postgresql://localhost:5432/flight_booking
@@ -15,4 +16,5 @@ jwt:
   secret: secret
   clockSkew: 10
   validFor: 36000
+
 

@@ -87,15 +87,17 @@ public class FlightAppSecurityConfiguration extends WebSecurityConfigurerAdapter
 
 //    @Override
 //    public void configure(WebSecurity http) {
-//        http.ignoring().antMatchers(getDisabledUrlPaths());
-//        http.ignoring().antMatchers(HttpMethod.OPTIONS);
-//        http.ignoring().antMatchers(HttpMethod.GET, "/sites/**");
-//        http.ignoring().antMatchers(HttpMethod.GET, "/attributes/**");
-//        http.ignoring().antMatchers(HttpMethod.GET, "/cabins/**");
+//        http.ignoring().antMatchers("/v2/api-docs",
+//                "/configuration/ui",
+//                "/swagger-resources/**",
+//                "/configuration/security",
+//                "/swagger-ui.html",
+//                "/webjars/**");
 //    }
 //
 //    private String[] getDisabledUrlPaths() {
-//        return new String[] {  "/users/register", "/webjars/**", "/v2/api-docs/**" };
+//        return new String[] {  "/swagger-ui.html" };
+//
 //    }
 
 }

@@ -42,16 +42,5 @@ public class FlightEntity extends BaseEntity {
         flightClasses.add(flight);
         flight.setFlight(this);
     }
-
-    @Override
-    public String toString() {
-        return "FlightEntity{" +
-                "departure='" + departure + '\'' +
-                ", destination='" + destination + '\'' +
-                ", departureTime=" + departureTime +
-                ", arrivalTime=" + arrivalTime +
-                ", capacity=" + capacity +
-                ", validity=" + validity +
-                '}';
-    }
+    
 }

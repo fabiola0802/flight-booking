@@ -1,6 +1,8 @@
 package com.falterziu.flightdata.mapper;
 
+import com.falterziu.flightdata.dto.classes.ClassDto;
 import com.falterziu.flightdata.dto.flight_class.FlightClassDto;
+import com.falterziu.flightdata.dto.flight_class.FlightClassResponseDto;
 import com.falterziu.flightdata.entity.ClassEntity;
 import com.falterziu.flightdata.entity.FlightClassEntity;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-10-13T22:41:00+0200",
+    date = "2021-10-18T00:31:19+0200",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 1.8.0_231 (Oracle Corporation)"
 )
 @Component
@@ -25,6 +27,7 @@ public class FlightClassMapperImpl implements FlightClassMapper {
         FlightClassEntity flightClassEntity = new FlightClassEntity();
 
         flightClassEntity.setClassEntity( flightClassDtoToClassEntity( flightClassDto ) );
+        flightClassEntity.setId( flightClassDto.getId() );
         flightClassEntity.setPrice( flightClassDto.getPrice() );
         flightClassEntity.setCapacity( flightClassDto.getCapacity() );
 
@@ -32,43 +35,30 @@ public class FlightClassMapperImpl implements FlightClassMapper {
     }
 
     @Override
-    public FlightClassDto toDto(FlightClassEntity flightClassEntity) {
+    public FlightClassResponseDto toDto(FlightClassEntity flightClassEntity) {
         if ( flightClassEntity == null ) {
             return null;
         }
 
-        FlightClassDto flightClassDto = new FlightClassDto();
+        FlightClassResponseDto flightClassResponseDto = new FlightClassResponseDto();
 
-        flightClassDto.setClassId( flightClassEntity.getId() );
-        flightClassDto.setPrice( flightClassEntity.getPrice() );
-        flightClassDto.setCapacity( flightClassEntity.getCapacity() );
+        flightClassResponseDto.setClassDto( classEntityToClassDto( flightClassEntity.getClassEntity() ) );
+        flightClassResponseDto.setId( flightClassEntity.getId() );
+        flightClassResponseDto.setPrice( flightClassEntity.getPrice() );
+        flightClassResponseDto.setCapacity( flightClassEntity.getCapacity() );
 
-        return flightClassDto;
+        return flightClassResponseDto;
     }
 
     @Override
-    public List<FlightClassDto> toDtoList(List<FlightClassEntity> flightClassEntities) {
+    public List<FlightClassResponseDto> toDtoList(List<FlightClassEntity> flightClassEntities) {
         if ( flightClassEntities == null ) {
             return null;
         }
 
-        List<FlightClassDto> list = new ArrayList<FlightClassDto>( flightClassEntities.size() );
+        List<FlightClassResponseDto> list = new ArrayList<FlightClassResponseDto>( flightClassEntities.size() );
         for ( FlightClassEntity flightClassEntity : flightClassEntities ) {
             list.add( toDto( flightClassEntity ) );
-        }
-
-        return list;
-    }
-
-    @Override
-    public List<FlightClassEntity> toEntityList(List<FlightClassDto> flightClassDtoList) {
-        if ( flightClassDtoList == null ) {
-            return null;
-        }
-
-        List<FlightClassEntity> list = new ArrayList<FlightClassEntity>( flightClassDtoList.size() );
-        for ( FlightClassDto flightClassDto : flightClassDtoList ) {
-            list.add( toEntity( flightClassDto ) );
         }
 
         return list;
@@ -84,5 +74,18 @@ public class FlightClassMapperImpl implements FlightClassMapper {
         classEntity.setId( flightClassDto.getClassId() );
 
         return classEntity;
+    }
+
+    protected ClassDto classEntityToClassDto(ClassEntity classEntity) {
+        if ( classEntity == null ) {
+            return null;
+        }
+
+        ClassDto classDto = new ClassDto();
+
+        classDto.setId( classEntity.getId() );
+        classDto.setName( classEntity.getName() );
+
+        return classDto;
     }
 }

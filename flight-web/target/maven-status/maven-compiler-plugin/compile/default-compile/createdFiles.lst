@@ -1,3 +1,9 @@
-com\falterziu\flightweb\controller\RestExceptionHandler.class
-com\falterziu\flightweb\controller\UserController.class
+com\falterziu\flightweb\controller\BookingController.class
+com\falterziu\flightweb\controller\NotificationController.class
 com\falterziu\flightweb\FlightWebApplication.class
+com\falterziu\flightweb\controller\AuthController.class
+com\falterziu\flightweb\controller\ClassController.class
+com\falterziu\flightweb\config\SpringFoxConfig.class
+com\falterziu\flightweb\controller\RestExceptionHandler.class
+com\falterziu\flightweb\controller\FlightController.class
+com\falterziu\flightweb\controller\UserController.class

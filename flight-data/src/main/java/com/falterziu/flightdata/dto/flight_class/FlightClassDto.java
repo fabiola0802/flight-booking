@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 public class FlightClassDto {
 
 
+    private Integer id;
+
     private BigDecimal price;
 
     @Min(value =20, message = "Minimum capacity is 20")

@@ -2,7 +2,6 @@ package com.falterziu.flightdata.entity;
 
 
 import com.falterziu.flightdata.enumeration.Status;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,5 +31,8 @@ public class BookingEntity extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private UserEntity user;
+
+    @Column
+    private Boolean validity;
 
 }

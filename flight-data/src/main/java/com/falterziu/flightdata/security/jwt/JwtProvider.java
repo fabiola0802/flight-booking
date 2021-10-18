@@ -54,6 +54,17 @@ public class JwtProvider {
 
     }
 
+    public String invalidateJwtToken(String token) {
+//        Claims claims = Jwts.parser()
+//                .setSigningKey(jwtSecret)
+//                .parseClaimsJws(token)
+//                .getBody();
+//        return Jwts.builder().setSubject(userPrinciple.getEmail()).setIssuedAt(new Date())
+//                .setExpiration(Date.from((Date) claims.setExpiration(Date.from(ZonedDateTime.now().minusDays(3).toInstant()))).signWith(SignatureAlgorithm.HS512, jwtSecret)
+//                .compact();
+        return null;
+    }
+
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)

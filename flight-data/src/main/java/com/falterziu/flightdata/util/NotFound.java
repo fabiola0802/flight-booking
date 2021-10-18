@@ -4,6 +4,7 @@ public enum NotFound {
 
     USER_NOT_FOUND ("User not found"),
     CLASS_NOT_FOUND("Class not found"),
+    BOOKING_NOT_FOUND("Booking not found"),
     FLIGHT_NOT_FOUND("Flight not found");
 
 

@@ -1,9 +1,8 @@
 package com.falterziu.flightdata.dto.flight;
 
-import com.falterziu.flightdata.dto.flight_class.FlightClassDto;
+import com.falterziu.flightdata.dto.flight_class.FlightClassResponseDto;
 import lombok.Getter;
 import lombok.Setter;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +27,6 @@ public class FlightResponseDto {
 
     private Integer capacity;
 
-    private List<FlightClassDto> flightClasses;
+    private List<FlightClassResponseDto> flightClasses;
 
 }
