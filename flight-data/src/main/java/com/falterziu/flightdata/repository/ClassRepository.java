@@ -10,7 +10,7 @@ import java.util.List;
 public interface ClassRepository extends JpaRepository<ClassEntity, Integer> {
 
 
-    @Query("select c from #{#entityName}  c where c.id IN :ids ")
+    @Query("select c from #{#entityName}  c where c.id IN ?1 ")
     List<ClassEntity> findClassEntityByIds(List<Integer> ids);
 
 }

@@ -11,13 +11,13 @@ public class FlightSpecifications {
         if(from != null){
             return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("departureTime"), from.atStartOfDay());
         }
-        return null;
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.literal(1), 1);
     }
 
     public static Specification<FlightEntity> arrivalTimeLessThan(LocalDate to){
         if(to != null){
             return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("departureTime"), to.atStartOfDay());
         }
-        return null;
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(criteriaBuilder.literal(1), 1);
     }
 }

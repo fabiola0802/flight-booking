@@ -34,8 +34,8 @@ private final FlightService flightService;
     @PreAuthorize("hasAnyAuthority('SUPERVISOR', 'USER')")
     public ResponseEntity<Page<FlightResponseDto>> getAll(@RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
                                                           @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                                          @RequestParam(value = "from")  String from,
-                                                          @RequestParam(value = "to")  String to) {
+                                                          @RequestParam(value = "from", required = false)  String from,
+                                                          @RequestParam(value = "to", required = false)  String to) {
         FlightFilter flightFilter = new FlightFilter(from,to);
         return ResponseEntity.ok(flightService.getAll(pageNumber,pageSize, flightFilter));
     }

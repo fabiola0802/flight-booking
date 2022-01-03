@@ -79,7 +79,7 @@ public class FlightServiceImpl implements FlightService {
                         .and(FlightSpecifications.arrivalTimeLessThan(flightFilter.getTo())));
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(Sort.Direction.DESC, "departureTime"));
-        return flightMapper.toPageDto(flightRepository.findAll(specification,pageable));
+        return flightMapper.toPageDto(flightRepository.findAll(specification, pageable));
     }
 
     @Override
